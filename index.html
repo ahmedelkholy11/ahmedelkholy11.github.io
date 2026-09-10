@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmed Elkholy | Mechatronics Eng & Physical AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f0e9df;
+            --bg-alt: #e8e0d4;
+            --dark: #2d2d2d;
+            --olive: #6b6b3c;
+            --olive-dark: #555530;
+            --text: #3a3a3a;
+            --text-light: #5a5a5a;
+            --accent: #ff5a5a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(240, 233, 223, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(107, 107, 60, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            color: var(--dark);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-logo span {
+            color: var(--olive);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--olive);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--olive);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--dark);
+            transition: all 0.3s;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(107, 107, 60, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(107, 107, 60, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            color: var(--dark);
+            letter-spacing: 4px;
+            line-height: 0.95;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 0.8s ease forwards 0.2s;
+        }
+
+        .hero .subtitle {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 2.2rem);
+            color: var(--olive);
+            letter-spacing: 6px;
+            margin-top: 0.8rem;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 0.8s ease forwards 0.5s;
+        }
+
+        .hero .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 1s;
+        }
+
+        .scroll-hint a {
+            color: var(--olive);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scroll-hint .arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid var(--olive);
+            border-bottom: 2px solid var(--olive);
+            transform: rotate(45deg);
+            animation: bounce 2s infinite;
+        }
+
+        /* ===== SECTION STYLES ===== */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            color: var(--dark);
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--olive);
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .about-details {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .about-details li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(107, 107, 60, 0.15);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .about-details li strong {
+            color: var(--olive-dark);
+            min-width: 160px;
+            font-weight: 700;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            transition: transform 0.3s;
+        }
+
+        .about-image img:hover {
+            transform: scale(1.02);
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            border: 3px solid var(--olive);
+            border-radius: 12px;
+            z-index: -1;
+        }
+
+        /* ===== SKILLS SECTION ===== */
+        #skills {
+            background: var(--bg-alt);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .skill-card {
+            background: var(--bg);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            border-top: 4px solid var(--olive);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        }
+
+        .skill-card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--olive-dark);
+            margin-bottom: 1rem;
+        }
+
+        .skill-card p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* ===== EXPERIENCE SECTION ===== */
+        .experience-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .exp-card {
+            padding: 2.5rem;
+            border-left: 4px solid var(--olive);
+            background: var(--bg-alt);
+            border-radius: 0 12px 12px 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .exp-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .exp-card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--olive-dark);
+            margin-bottom: 1rem;
+        }
+
+        .exp-card p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* ===== PROJECTS SECTION ===== */
+        #projects {
+            background: var(--bg-alt);
+        }
+
+        .project-divider-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .project-divider-section .section-title {
+            display: block;
+        }
+
+        .project-divider-section .section-title::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .project-divider-section .section-title span {
+            color: var(--olive);
+        }
+
+        .project {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 5rem;
+            padding-bottom: 5rem;
+            border-bottom: 1px solid rgba(107, 107, 60, 0.15);
+        }
+
+        .project:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .project-info h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .project-info h4 {
+            font-size: 1.1rem;
+            color: var(--olive);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-info ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .project-info ul li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        .project-info ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--olive);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.8rem;
+            background: var(--dark);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .project-link:hover {
+            background: var(--olive-dark);
+            transform: translateY(-2px);
+        }
+
+        .project-link svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .project-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        .project-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .project-image img:hover {
+            transform: scale(1.03);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-content {
+            text-align: center;
+        }
+
+        .contact-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            color: var(--olive);
+            margin-bottom: 3rem;
+            letter-spacing: 3px;
+        }
+
+        .contact-cards {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2.5rem 3rem;
+            background: var(--bg-alt);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-width: 200px;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .contact-icon.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .contact-icon.linkedin {
+            background: linear-gradient(135deg, #0077B5, #005A8E);
+        }
+
+        .contact-icon.email {
+            background: linear-gradient(135deg, #EA4335, #C5221F);
+        }
+
+        .contact-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .contact-card span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: capitalize;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--dark);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+        }
+
+        footer .footer-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: white;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        footer .footer-name span {
+            color: var(--olive);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: rotate(45deg) translateY(0);
+            }
+            40% {
+                transform: rotate(45deg) translateY(-10px);
+            }
+            60% {
+                transform: rotate(45deg) translateY(-5px);
+            }
+        }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .about-image {
+                order: -1;
+                text-align: center;
+            }
+
+            .about-image::before {
+                display: none;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .project-image {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--bg);
+                flex-direction: column;
+                padding: 5rem 2rem;
+                gap: 1.5rem;
+                transition: right 0.4s ease;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .contact-cards {
+                gap: 1.5rem;
+            }
+
+            .contact-card {
+                padding: 2rem;
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">AHMED <span>ELKHOLY</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+        <h1>AHMED ELKHOLY</h1>
+        <p class="subtitle">MECHATRONICS ENG &nbsp;|&nbsp; PHYSICAL AI</p>
+        <div class="scroll-hint">
+            <a href="#about">
+                <span>Scroll Down</span>
+                <div class="arrow"></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <div class="section-container">
+            <h2 class="section-title reveal">About Me</h2>
+            <div class="about-content">
+                <div class="about-text reveal">
+                    <p>I am a Mechatronics Engineering student passionate about integrating mechanical systems with advanced perception algorithms.</p>
+                    <ul class="about-details">
+                        <li>
+                            <strong>Education:</strong>
+                            <span>2nd-year Mechatronics Engineering at Tanta University.</span>
+                        </li>
+                        <li>
+                            <strong>Core Focus:</strong>
+                            <span>Physical AI, Computer Vision, and Autonomous Navigation.</span>
+                        </li>
+                        <li>
+                            <strong>Experience:</strong>
+                            <span>Perception (AI Team) at T-Racers Formula Student.</span>
+                        </li>
+                        <li>
+                            <strong>Technical Arsenal:</strong>
+                            <span>Python, Machine Learning, Computer Vision, and MATLAB.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <img src="images/page2_img1.jpeg" alt="Ahmed Elkholy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills">
+        <div class="section-container">
+            <h2 class="section-title reveal">Personal Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card reveal">
+                    <h3>Cross-Functional Teamwork</h3>
+                    <p>I excel at teamwork, utilizing my multidisciplinary mechatronics background to bridge the gap between mechanical design and software development. I thrive in collaborative environments, ensuring smooth integration across different technical departments to achieve complex, unified system goals.</p>
+                </div>
+                <div class="skill-card reveal">
+                    <h3>Project Coordination</h3>
+                    <p>I possess strong organizational skills with a proven ability to coordinate community initiatives and collaborative projects. I effectively utilize structured tools to manage logistics, aggregate data, and keep teams aligned from initial planning through final execution.</p>
+                </div>
+                <div class="skill-card reveal">
+                    <h3>Initiative &amp; Continuous Learning</h3>
+                    <p>I am highly self-motivated and proactively seek out environments that push my technical boundaries. Through participation in intensive bootcamps, specialized machine learning training, and active industry networking, I continuously adapt to the latest advancements in physical AI.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section id="experience">
+        <div class="section-container">
+            <h2 class="section-title reveal">Work Experience</h2>
+            <div class="experience-grid">
+                <div class="exp-card reveal">
+                    <h3>AI Team - Perception</h3>
+                    <p>Developing machine learning and computer vision algorithms for autonomous racing with the T-Racers Formula Student team. Leveraging my mechatronics background to ensure our perception models accurately translate visual track data into precise, physical vehicle control.</p>
+                </div>
+                <div class="exp-card reveal">
+                    <h3>Machine Learning Trainee</h3>
+                    <p>Completed an intensive summer training program with the National Telecommunication Institute (NTI). Gained hands-on experience in data processing, model training, and applying machine learning techniques to real-world datasets to build a strong foundation in AI development.</p>
+                </div>
+                <div class="exp-card reveal">
+                    <h3>Vehicle Dynamics Simulation</h3>
+                    <p>Served in the T-Racers Performance department, using MATLAB, Simscape, and IPG CarMaker. Ran multibody dynamics simulations, configured driver parameters, and tested vehicle maneuver setups for competition. The team finished 3rd overall in the Concept Class — I was personally responsible for LTS, which placed 9th in its category.</p>
+                </div>
+                <div class="exp-card reveal">
+                    <h3>Embedded Systems Developer</h3>
+                    <p>Designed and coded micro-controller systems, including an Arduino-controlled remote RC car simulation in Tinkercad. Integrated L293D motor drivers, sensors, and servo steering to bridge physical hardware with software logic.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects">
+        <div class="section-container">
+            <div class="project-divider-section">
+                <h2 class="section-title reveal">PORTFOLIO <span>PROJECT</span></h2>
+            </div>
+
+            <!-- Project 1 -->
+            <div class="project">
+                <div class="project-info reveal">
+                    <h3>Project 1</h3>
+                    <h4>Insurance Fraud Detection (Team Project)</h4>
+                    <ul>
+                        <li><strong>The Problem:</strong> Automated detection of fraudulent insurance claims to reduce manual review costs.</li>
+                        <li><strong>Data &amp; Preprocessing:</strong> Processed 360K+ records, utilizing SMOTE to balance the highly imbalanced dataset (13.7% fraud rate).</li>
+                        <li><strong>Modeling:</strong> Trained and compared multiple models (Decision Tree, Random Forest, SVM, Naive Bayes), evaluating them based on F1-Score.</li>
+                        <li><strong>Deployment:</strong> Shipped the optimal model via an interactive Streamlit web application for real-time predictions.</li>
+                    </ul>
+                    <a href="https://github.com/abdulraheemashour-dot/fraud-detection-project" target="_blank" rel="noopener" class="project-link">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        View on GitHub
+                    </a>
+                </div>
+                <div class="project-image reveal">
+                    <img src="images/page6_img1.png" alt="Insurance Fraud Detection App Screenshot">
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project">
+                <div class="project-info reveal">
+                    <h3>Project 2</h3>
+                    <h4>3-Input Majority Logic Circuit</h4>
+                    <ul>
+                        <li><strong>Objective:</strong> Designed and implemented a physical combinational logic circuit that outputs a high signal (1) only when a majority of its inputs are active.</li>
+                        <li><strong>Logic Design:</strong> Formulated the truth table and optimized the Boolean expression (AB + BC + AC) to minimize the required logic gates.</li>
+                        <li><strong>Hardware Implementation:</strong> Assembled and wired the circuit entirely on a breadboard utilizing standard logic gate ICs (AND &amp; OR gates).</li>
+                        <li><strong>Validation:</strong> Systematically tested all input combinations to verify that the physical hardware output perfectly matched the theoretical logic model.</li>
+                    </ul>
+                </div>
+                <div class="project-image reveal">
+                    <img src="images/page7_img1.jpeg" alt="3-Input Majority Logic Circuit on Breadboard">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <div class="section-container">
+            <div class="contact-content">
+                <h2 class="contact-title reveal">GET IN TOUCH</h2>
+                <div class="contact-cards">
+                    <a href="https://wa.link/b6oswx" target="_blank" rel="noopener" class="contact-card reveal">
+                        <div class="contact-icon whatsapp">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </div>
+                        <span>WhatsApp</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/ahmed-h-elkholy" target="_blank" rel="noopener" class="contact-card reveal">
+                        <div class="contact-icon linkedin">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </div>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="mailto:ahmedelkholyae11@gmail.com" class="contact-card reveal">
+                        <div class="contact-icon email">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+                        </div>
+                        <span>Email</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-name">AHMED <span>ELKHOLY</span></div>
+        <p>Mechatronics Engineering | Physical AI</p>
+        <p style="margin-top: 0.5rem;">&copy; 2026 Ahmed Elkholy. All rights reserved.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinkElements = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinkElements.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    </script>
+
+</body>
+</html>
