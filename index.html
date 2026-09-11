@@ -245,9 +245,10 @@
             font-family: 'Bebas Neue', sans-serif;
             font-size: clamp(1rem, 2.5vw, 2rem);
             color: var(--olive);
-            letter-spacing: 10px;
+            letter-spacing: 6px;
             margin-top: 1rem;
             padding-left: 5%;
+            white-space: nowrap;
             opacity: 0;
             animation: fadeSlideUp 0.8s ease forwards 0.8s;
         }
@@ -262,9 +263,30 @@
             animation: fadeSlideUp 0.8s ease forwards 1.1s;
         }
 
+        /* Typing cursor for tagline */
+        .hero .tagline::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: var(--olive);
+            font-weight: 400;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Glow pulse on hero name */
+        .hero h1 .line-inner {
+            text-shadow: 0 0 0 transparent;
+            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards, glowPulse 4s ease-in-out 2s infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 0px transparent; }
+            50% { text-shadow: 0 0 30px rgba(107, 107, 60, 0.15); }
+        }
+
         .scroll-indicator {
             position: absolute;
-            bottom: 1.5rem;
+            bottom: 0.5rem;
             opacity: 0;
             animation: fadeSlideUp 0.8s ease forwards 1.4s;
         }
